@@ -1,0 +1,11 @@
+{
+    "name": "mohh2-server",
+    "version": "1.0.0",
+    "description": "A simple server for mohh2",
+    "main": "index.js",
+    "scripts": {
+        "start": "node app.js"
+    },
+    "license": "MIT",
+    "type": "module"
+}
