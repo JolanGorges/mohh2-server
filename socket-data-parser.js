@@ -31,12 +31,30 @@ export default class SocketDataParser {
             case '@dir':
                 this.dirResponse(id);
                 break;
+            case 'skey':
+            case 'addr':
+                this.skeyResponse("skey");
+                break;
+            case 'news':
+                this.newsResponse(id);
+                break;
             default:
                 logger.warn(`${id} not implemented`);
                 break;
         }
     }
 
+    newsResponse(id) {
+        const content = ":)";
+        this.send(id, content);
+    }
+
+    skeyResponse(id) {
+        const content = new Map([
+            ['SKEY', '$51ba8aee64ddfacae5baefa6bf61e009'],
+        ]);
+        this.send(id, content);
+    }
 
     dirResponse(id) {
         const content = new Map([
@@ -47,13 +65,18 @@ export default class SocketDataParser {
     }
 
     send(id, content) {
-        content = Array.from(content).map(([key, value]) => `${key}=${value}`).join('\n') + '\0';
+        if(content instanceof Map)
+            content = Array.from(content).map(([key, value]) => `${key}=${value}`).join('\n') + '\0';
+        else if(typeof content === 'string')
+            content += '\0';
+        else
+            throw new Error('Invalid content type');
         const buffer = Buffer.alloc(12 + content.length);
         buffer.write(id, 0);
         buffer.writeInt32BE(0, 4);
         buffer.writeInt32BE(content.length + 12, 8);
         buffer.write(content, 12);
-        logger.debug(`@dir response: ${content}`);
+        logger.debug(`${id} response: ${content}`);
         this.socket.write(buffer);
     }
 }
