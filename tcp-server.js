@@ -4,13 +4,13 @@ import SocketDataParser from './socket-data-parser.js';
 export default function tcpServer(port) {
     const server = net.createServer((socket) => {
         const parser = new SocketDataParser(socket);
-        console.log('TCP client connected');
+        logger.info('TCP client connected');
 
         socket.on('error', (error) => {
             if (error.code === 'ECONNRESET') {
-                console.log('TCP client connection reset');
+                logger.info('TCP client connection reset');
             } else {
-                console.error('socket error:', error);
+                logger.error('socket error:', error);
             }
         });
 
@@ -19,11 +19,11 @@ export default function tcpServer(port) {
         });
 
         socket.on('end', () => {
-            console.log('TCP client disconnected');
+            logger.info('TCP client disconnected');
         });
     });
 
     server.listen(port, () => {
-        console.log(`TCP server listening on port ${port}`);
+        logger.info(`TCP server listening on port ${port}`);
     });
 }
