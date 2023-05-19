@@ -1,6 +1,7 @@
 import tls from 'tls';
 import fs from 'fs';
 import SocketDataParser from './socket-data-parser.js';
+import logger from './logger.js';
 
 export default function tlsServer(port) {
     const options = {

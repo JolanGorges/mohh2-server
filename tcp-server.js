@@ -1,5 +1,6 @@
 import net from 'net';
 import SocketDataParser from './socket-data-parser.js';
+import logger from './logger.js';
 
 export default function tcpServer(port) {
     const server = net.createServer((socket) => {
@@ -13,6 +14,10 @@ export default function tcpServer(port) {
                 logger.error('socket error:', error);
             }
         });
+
+        setInterval(() => {
+            parser.ping();
+        }, 30000);
 
         socket.on('data', (data) => {
             parser.parse(data);
